@@ -113,7 +113,7 @@ function runTest(test, thread, multidb) {
 
 
 
-function runTests(threadCounts, multidb, reportLabel, reportHost, reportPort) {
+function runTests(threadCounts, multidb, shard, reportLabel, reportHost, reportPort) {
     var testResults = {};
     // The following are only used when reportLabel is not None.
     var resultsCollection = db.getSiblingDB("bench_results").raw;
