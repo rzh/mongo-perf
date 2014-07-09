@@ -21,6 +21,15 @@ tests.push( { name: "Geo.geoWithin.center",
                   { op: "find", query: {loc: { $geoWithin: {$center: [[0, 0], 10]}} } }
               ] } );
 
+tests.push( { name: "Geo.geoWithin.center.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $geoWithin: {$center: [[25, 25], 10]}} } }
+              ] } );
 
 tests.push( { name: "Geo.geoWithin.box",
               pre: function( collection ) { 
@@ -32,8 +41,18 @@ tests.push( { name: "Geo.geoWithin.box",
                   { op: "find", query: {loc: { $geoWithin: {$box: [[-9, -8], [9, 8]]}} } }
               ] } );
 
+tests.push( { name: "Geo.geoWithin.box.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $geoWithin: {$box: [[9, 8], [27, 24]]}} } }
+              ] } );
 
-tests.push( { name: "Geo.geoWithin.geoSphere",
+
+tests.push( { name: "Geo.geoWithin.centerSphere",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
@@ -41,6 +60,16 @@ tests.push( { name: "Geo.geoWithin.geoSphere",
               },
               ops: [
                   { op: "find", query: {loc: { $geoWithin: {$centerSphere: [[0, 0], 0.175]}} } }
+              ] } );
+
+tests.push( { name: "Geo.geoWithin.centerSphere.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $geoWithin: {$centerSphere: [[20, -20], 0.175]}} } }
               ] } );
 
 tests.push( { name: "Geo.geoWithin.polygon",
@@ -66,6 +95,16 @@ tests.push( { name: "Geo.geoWithin.center.findOne",
               ] } );
 
 
+tests.push( { name: "Geo.geoWithin.center.findOne.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $geoWithin: {$center: [[25, 25], 10]}} } }
+              ] } );
+
 tests.push( { name: "Geo.geoWithin.box.findOne",
               pre: function( collection ) { 
               	  collection.drop(); 
@@ -76,8 +115,18 @@ tests.push( { name: "Geo.geoWithin.box.findOne",
                   { op: "findOne", query: {loc: { $geoWithin: {$box: [[-9, -8], [9, 8]]}} } }
               ] } );
 
+tests.push( { name: "Geo.geoWithin.box.findOne.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $geoWithin: {$box: [[9, 8], [27, 24]]}} } }
+              ] } );
 
-tests.push( { name: "Geo.geoWithin.geoSphere.findOne",
+
+tests.push( { name: "Geo.geoWithin.centerSphere.findOne",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
@@ -85,6 +134,16 @@ tests.push( { name: "Geo.geoWithin.geoSphere.findOne",
               },
               ops: [
                   { op: "findOne", query: {loc: { $geoWithin: {$centerSphere: [[0, 0], 0.175]}} } }
+              ] } );
+
+tests.push( { name: "Geo.geoWithin.centerSphere.findOne.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $geoWithin: {$centerSphere: [[20, -20], 0.175]}} } }
               ] } );
 
 tests.push( { name: "Geo.geoWithin.polygon.findOne",
