@@ -52,7 +52,7 @@ tests.push( { name: "Geo.geoWithin.box.offcenter",
               ] } );
 
 
-tests.push( { name: "Geo.geoWithin.geoSphere",
+tests.push( { name: "Geo.geoWithin.centerSphere",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
@@ -62,7 +62,7 @@ tests.push( { name: "Geo.geoWithin.geoSphere",
                   { op: "find", query: {loc: { $geoWithin: {$centerSphere: [[0, 0], 0.175]}} } }
               ] } );
 
-tests.push( { name: "Geo.geoWithin.geoSphere.offcenter",
+tests.push( { name: "Geo.geoWithin.centerSphere.offcenter",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
@@ -126,7 +126,7 @@ tests.push( { name: "Geo.geoWithin.box.findOne.offcenter",
               ] } );
 
 
-tests.push( { name: "Geo.geoWithin.geoSphere.findOne",
+tests.push( { name: "Geo.geoWithin.centerSphere.findOne",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
@@ -136,7 +136,7 @@ tests.push( { name: "Geo.geoWithin.geoSphere.findOne",
                   { op: "findOne", query: {loc: { $geoWithin: {$centerSphere: [[0, 0], 0.175]}} } }
               ] } );
 
-tests.push( { name: "Geo.geoWithin.geoSphere.findOne.offcenter",
+tests.push( { name: "Geo.geoWithin.centerSphere.findOne.offcenter",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
