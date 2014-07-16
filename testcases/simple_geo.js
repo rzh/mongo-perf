@@ -177,7 +177,7 @@ tests.push( { name: "Geo.geoNear.2d.findOne.offcenter",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "findOne", query: {loc: { $near: [20.1.1, 20.1.1]} } }
+                  { op: "findOne", query: {loc: { $near: [20.1, 20.1]} } }
               ] } );
 
 tests.push( { name: "Geo.geoNear.2d.find100.center",
