@@ -187,7 +187,7 @@ tests.push( { name: "Geo.geoNear.2d.find100.center",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "find", query: {loc: { $near: [0, 0]} } }
+                  { op: "find", query: {loc: { $near: [0.1, 0.1]} } }
               ] } );
 
 tests.push( { name: "Geo.geoNear.2d.find100.offcenter",
@@ -207,7 +207,7 @@ tests.push( { name: "Geo.geoNear.2dSphere.findOne.center",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "findOne", query: {loc: { $nearSphere: [0, 0]} } }
+                  { op: "findOne", query: {loc: { $nearSphere: [0.1, 0.1]} } }
               ] } );
 
 tests.push( { name: "Geo.geoNear.2dSphere.findOne.offcenter",
@@ -227,7 +227,7 @@ tests.push( { name: "Geo.geoNear.2dSphere.find100.center",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "find", query: {loc: { $nearSphere: [0, 0]} } }
+                  { op: "find", query: {loc: { $nearSphere: [0.1, 0.1]} } }
               ] } );
 
 
