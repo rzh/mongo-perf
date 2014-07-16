@@ -156,3 +156,48 @@ tests.push( { name: "Geo.geoWithin.polygon.findOne",
                   { op: "findOne", query: {loc: { $geoWithin: {$geometry: {type: "Polygon", coordinates: [ [ [-10,-10], [8,-9], [10, 10], [5, 6], [-9, 9], [-10,-10] ] ]} }} } }
               ] } );
 
+
+
+// geoNear
+
+tests.push( { name: "Geo.geoNear.2d.findOne",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $near: [0, 0]} } }
+              ] } );
+
+tests.push( { name: "Geo.geoNear.2d.find100",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $near: [0, 0]} } }
+              ] } );
+
+tests.push( { name: "Geo.geoNear.2dSphere.findOne",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $nearSphere: [0, 0]} } }
+              ] } );
+
+tests.push( { name: "Geo.geoNear.2dSphere.find100",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $nearSphere: [0, 0]} } }
+              ] } );
+
+
