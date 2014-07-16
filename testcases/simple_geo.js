@@ -160,7 +160,7 @@ tests.push( { name: "Geo.geoWithin.polygon.findOne",
 
 // geoNear
 
-tests.push( { name: "Geo.geoNear.2d.findOne",
+tests.push( { name: "Geo.geoNear.2d.findOne.center",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
@@ -170,7 +170,17 @@ tests.push( { name: "Geo.geoNear.2d.findOne",
                   { op: "findOne", query: {loc: { $near: [0, 0]} } }
               ] } );
 
-tests.push( { name: "Geo.geoNear.2d.find100",
+tests.push( { name: "Geo.geoNear.2d.findOne.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $near: [20, 20]} } }
+              ] } );
+
+tests.push( { name: "Geo.geoNear.2d.find100.center",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
@@ -180,7 +190,17 @@ tests.push( { name: "Geo.geoNear.2d.find100",
                   { op: "find", query: {loc: { $near: [0, 0]} } }
               ] } );
 
-tests.push( { name: "Geo.geoNear.2dSphere.findOne",
+tests.push( { name: "Geo.geoNear.2d.find100.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $near: [-20, 20]} } }
+              ] } );
+
+tests.push( { name: "Geo.geoNear.2dSphere.findOne.center",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
@@ -190,7 +210,17 @@ tests.push( { name: "Geo.geoNear.2dSphere.findOne",
                   { op: "findOne", query: {loc: { $nearSphere: [0, 0]} } }
               ] } );
 
-tests.push( { name: "Geo.geoNear.2dSphere.find100",
+tests.push( { name: "Geo.geoNear.2dSphere.findOne.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $nearSphere: [20, -20]} } }
+              ] } );
+
+tests.push( { name: "Geo.geoNear.2dSphere.find100.center",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2d"});
@@ -200,4 +230,14 @@ tests.push( { name: "Geo.geoNear.2dSphere.find100",
                   { op: "find", query: {loc: { $nearSphere: [0, 0]} } }
               ] } );
 
+
+tests.push( { name: "Geo.geoNear.2dSphere.find100.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $nearSphere: [-20, -20]} } }
+              ] } );
 
