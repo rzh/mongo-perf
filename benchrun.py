@@ -16,6 +16,9 @@ def parse_arguments():
     parser.add_argument('-m', '--multidb', dest='multidb',
                         help='Specify how many databases the test should use',
                         type=int, default=1)
+    parser.add_argument('-c', '--shard', dest='sharddb',
+                        help='Specify shard cluster the test should use, 0 - no shard, 1 - use shard cluster',
+                        type=int, default=0)
     parser.add_argument('-l', '--label', dest='reportlabel',
                         help='Specify the label for the report stats saved to bench_results db',
                         default='')
@@ -43,6 +46,13 @@ def main():
         print("MultiDB option must be greater than zero. Will be set to 1.")
         args.multidb = 1
 
+    if args.sharddb < 0:
+        print("ShardDB option must be either 0 or 1. Will be set to 0.")
+        args.sharddb = 0
+    elif args.sharddb > 1:
+        print("ShardDB option must be either 0 or 1. Will be set to 1.")
+        args.sharddb = 1
+
     # Print version info.
     call([args.shellpath, "--norc", "--eval",
           "print('db version: ' + db.version()); db.serverBuildInfo().gitVersion;"])
@@ -58,6 +68,7 @@ def main():
     cmdstr = ("runTests(" +
               str(args.threads) + ", " +
               str(args.multidb) + ", " +
+              str(args.sharddb) + ", " +
               "'" + args.reportlabel + "', " +
               "'" + args.reporthost + "', " +
               "'" + args.reportport + "'" +
