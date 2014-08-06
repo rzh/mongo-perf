@@ -50,7 +50,7 @@ function formatRunDate(now) {
             pad(now.getDate()));
 }
 
-function runTest(test, thread, multidb) {
+function runTest(test, thread, multidb, shard) {
     var collections = [];
 
     for (var i = 0; i < multidb; i++) {
@@ -84,6 +84,17 @@ function runTest(test, thread, multidb) {
         // This will silently fail and with no side-effects if the collection
         // already exists.
         theDb.createCollection(collections[i].getName());
+
+        if ( shard == 1 ) {
+        	// may need some check to make sure shard is enabled for the server FIXME
+        	// var t = sh.status();
+        	
+        	// when shard is enabled, we want to enable shard
+        	collections[i].ensureIndex( { _id: "hashed" } );
+
+        	sh.enableSharding("test" + i);
+        	var t = sh.shardCollection("test" + i + "." + collections[i].getName(), {_id: "hashed"});
+        }
     }
 
     var benchArgs = { ops:      new_ops,
@@ -113,7 +124,7 @@ function runTest(test, thread, multidb) {
 
 
 
-function runTests(threadCounts, multidb, reportLabel, reportHost, reportPort) {
+function runTests(threadCounts, multidb, shard, reportLabel, reportHost, reportPort) {
     var testResults = {};
     // The following are only used when reportLabel is not None.
     var resultsCollection = db.getSiblingDB("bench_results").raw;
@@ -161,7 +172,7 @@ function runTests(threadCounts, multidb, reportLabel, reportHost, reportPort) {
         var threadResults = {};
         for (var t = 0; t < threadCounts.length; t++) {
             var threadCount = threadCounts[t];
-            threadResults[threadCount] = runTest(test, threadCount, multidb);
+            threadResults[threadCount] = runTest(test, threadCount, multidb, shard);
         }
         testResults[test] = threadResults;
 
