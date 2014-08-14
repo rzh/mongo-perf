@@ -79,7 +79,17 @@ tests.push( { name: "Geo.geoWithin.polygon",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "find", query: {loc: { $geoWithin: {$geometry: {type: "Polygon", coordinates: [ [ [-10,-10], [8,-9], [10, 10], [5, 6], [-9, 9], [-10,-10] ] ]} }} } }
+                  { op: "find", query: {loc: { $geoWithin: {$polygon: [ [-10,-10], [8,-9], [10, 10], [5, 6], [-9, 9], [-10,-10] ] } }} }
+              ] } );
+
+tests.push( { name: "Geo.geoWithin.polygon.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $geoWithin: {$polygon: [ [0,-20], [18,-19], [20, 0], [15, -4], [1, -1], [0,-20] ] } }} }
               ] } );
 
 
@@ -153,8 +163,17 @@ tests.push( { name: "Geo.geoWithin.polygon.findOne",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "findOne", query: {loc: { $geoWithin: {$geometry: {type: "Polygon", coordinates: [ [ [-10,-10], [8,-9], [10, 10], [5, 6], [-9, 9], [-10,-10] ] ]} }} } }
+                  { op: "findOne", query: {loc: { $geoWithin: {$polygon: [ [-10,-10], [8,-9], [10, 10], [5, 6], [-9, 9], [-10,-10] ] } }} }
               ] } );
 
 
+tests.push( { name: "Geo.geoWithin.polygon.findOne.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $geoWithin: {$polygon: [ [0,-20], [18,-19], [20, 0], [15, -4], [1, -1], [0,-20] ] } }} }
+              ] } );
 
