@@ -28,6 +28,9 @@ def parse_arguments():
     parser.add_argument('--rport', '--reportport', dest='reportport',
                         help='Port of the mongod where the results will be saved',
                         default='27017')
+    parser.add_argument('-p', '--port', dest='port',
+                        help='Port of the mongod/mongos under test',
+                        default='27017')
     parser.add_argument('-s', '--shell', dest='shellpath',
                         help="Path to the mongo shell executable to use.",
                         default='mongo')
@@ -47,19 +50,19 @@ def main():
         args.multidb = 1
 
     if args.sharddb < 0:
-        print("ShardDB option must be either 0 or 1. Will be set to 0.")
+        print("ShardDB option must be [0, 2]. Will be set to 0.")
         args.sharddb = 0
-    elif args.sharddb > 1:
-        print("ShardDB option must be either 0 or 1. Will be set to 1.")
-        args.sharddb = 1
+    elif args.sharddb > 2:
+        print("ShardDB option must be [0, 2] . Will be set to 1.")
+        args.sharddb = 2
 
     # Print version info.
-    call([args.shellpath, "--norc", "--eval",
+    call([args.shellpath, "--norc", "--port",args.port, "--eval",
           "print('db version: ' + db.version()); db.serverBuildInfo().gitVersion;"])
     print("")
 
     # Open a mongo shell subprocess and load necessary files.
-    mongo_proc = Popen([args.shellpath, "--norc"], stdin=PIPE, stdout=PIPE)
+    mongo_proc = Popen([args.shellpath, "--norc", "--port", args.port], stdin=PIPE, stdout=PIPE)
     mongo_proc.stdin.write("load('util/utils.js')\n")
     for testfile in args.testfiles:
         mongo_proc.stdin.write("load('" + testfile + "')\n")
