@@ -42,7 +42,7 @@ tests.push( { name: "Insert.IntIDUpsert",
                     upsert : true,
                     query: { _id: { "#SEQ_INT":
                                 { seq_id: 0, start: 0, step: 1, unique: true } } },
-                    update: { }
+					update: {"$set": {x: 100} }
                   }
               ] } );
 
