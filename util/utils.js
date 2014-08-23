@@ -94,6 +94,12 @@ function runTest(test, thread, multidb, shard) {
 
         	sh.enableSharding("test" + i);
         	var t = sh.shardCollection("test" + i + "." + collections[i].getName(), {_id: "hashed"});
+        } else if ( shard == 2) {
+        	// may need some check to make sure shard is enabled for the server FIXME
+        	// var t = sh.status();
+        	
+        	sh.enableSharding("test" + i);
+        	var t = sh.shardCollection("test" + i + "." + collections[i].getName(), {_id: 1});
         }
     }
 
