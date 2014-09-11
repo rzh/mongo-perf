@@ -11,6 +11,14 @@ function generateGridMap(collection, x1, y1, x2, y2) {
 	}
 }
 
+function generateGridMapGeoJSON(collection, x1, y1, x2, y2) {
+	for( var i = x1; i < ( x2 + 1); i++) {
+		for(var j = y1; j < (y2 + 1); j++) {
+			collection.insert({loc: {type: "Point", coordinates: [i, j]}});
+		}
+	}
+}
+
 // geoWithin
 tests.push( { name: "Geo.within.2d.center",
               pre: function( collection ) { 
@@ -208,7 +216,7 @@ tests.push( { name: "Geo.near.2d.find100.center",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "find", query: {loc: { $near: [0.1, 0.1]} } }
+                  { op: "find", limit:100, query: {loc: { $near: [0.1, 0.1]} } }
               ] } );
 
 tests.push( { name: "Geo.near.2d.find100.offcenter",
@@ -218,7 +226,7 @@ tests.push( { name: "Geo.near.2d.find100.offcenter",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "find", query: {loc: { $near: [-20.1, 20.1]} } }
+                  { op: "find", limit:100, query: {loc: { $near: [-20.1, 20.1]} } }
               ] } );
 
 // geoNearSphere
