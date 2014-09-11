@@ -20,7 +20,7 @@ function generateGridMapGeoJSON(collection, x1, y1, x2, y2) {
 }
 
 // geoWithin
-tests.push( { name: "Geo.within.polygon",
+tests.push( { name: "Geo.within.2dsphere.polygon",
               pre: function( collection ) {
                   collection.drop();
                   collection.ensureIndex({loc: "2dsphere"});
@@ -30,7 +30,7 @@ tests.push( { name: "Geo.within.polygon",
                   { op: "find", query: {loc: { $geoWithin: {$geometry: { type: "Polygon", coordinates: [[ [-10,-10], [ 8, -9], [10, 10], [ 5,  6], [-9,  9], [-10,-10] ] ] } }} } }
               ] } );
 
-tests.push( { name: "Geo.within.polygon.offcenter",
+tests.push( { name: "Geo.within.2dsphere.polygon.offcenter",
               pre: function( collection ) {
                   collection.drop();
                   collection.ensureIndex({loc: "2dsphere"});
@@ -40,7 +40,7 @@ tests.push( { name: "Geo.within.polygon.offcenter",
                   { op: "find", query: {loc: { $geoWithin: {$geometry: { type: "Polygon", coordinates: [[ [  0,-20], [18,-19], [20,  0], [15, -4], [ 1, -1], [  0,-20] ] ] } }} } }
               ] } );
 
-tests.push( { name: "Geo.geoJSON.within.polygon",
+tests.push( { name: "Geo.geoJSON.within.2dsphere.polygon",
               pre: function( collection ) {
                   collection.drop();
                   collection.ensureIndex({loc: "2dsphere"});
@@ -50,7 +50,7 @@ tests.push( { name: "Geo.geoJSON.within.polygon",
                   { op: "find", query: {loc: { $geoWithin: {$geometry: { type: "Polygon", coordinates: [[ [-10,-10], [ 8, -9], [10, 10], [ 5,  6], [-9,  9], [-10,-10] ] ] } }} } }
               ] } );
 
-tests.push( { name: "Geo.geoJSON.within.polygon.offcenter",
+tests.push( { name: "Geo.geoJSON.within.2dsphere.polygon.offcenter",
               pre: function( collection ) {
                   collection.drop();
                   collection.ensureIndex({loc: "2dsphere"});
@@ -60,7 +60,7 @@ tests.push( { name: "Geo.geoJSON.within.polygon.offcenter",
                   { op: "find", query: {loc: { $geoWithin: {$geometry: { type: "Polygon", coordinates: [[ [  0,-20], [18,-19], [20,  0], [15, -4], [ 1, -1], [  0,-20] ] ] } }} } }
               ] } );
 
-tests.push( { name: "geo.geowithin.centersphere",
+tests.push( { name: "Geo.within.2dsphere.centersphere",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureindex({loc: "2dsphere"});
@@ -70,7 +70,7 @@ tests.push( { name: "geo.geowithin.centersphere",
                   { op: "find", query: {loc: { $geowithin: {$centersphere: [[0, 0], 0.175]}} } }
               ] } );
 
-tests.push( { name: "geo.geowithin.centersphere.offcenter",
+tests.push( { name: "Geo.within.2dsphere.centersphere.offcenter",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureindex({loc: "2dsphere"});
@@ -80,7 +80,7 @@ tests.push( { name: "geo.geowithin.centersphere.offcenter",
                   { op: "find", query: {loc: { $geowithin: {$centersphere: [[20, -20], 0.175]}} } }
               ] } );
 
-tests.push( { name: "geo.geoJSON.geowithin.centersphere",
+tests.push( { name: "Geo.geoJSON.within.2dsphere.centersphere",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureindex({loc: "2dsphere"});
@@ -90,7 +90,7 @@ tests.push( { name: "geo.geoJSON.geowithin.centersphere",
                   { op: "find", query: {loc: { $geowithin: {$centersphere: [[0, 0], 0.175]}} } }
               ] } );
 
-tests.push( { name: "geo.geoJSON.geowithin.centersphere.offcenter",
+tests.push( { name: "Geo.geoJSON.within.2dsphere.centersphere.offcenter",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureindex({loc: "2dsphere"});
@@ -100,7 +100,7 @@ tests.push( { name: "geo.geoJSON.geowithin.centersphere.offcenter",
                   { op: "find", query: {loc: { $geowithin: {$centersphere: [[20, -20], 0.175]}} } }
               ] } );
 // findOne
-tests.push( { name: "Geo.within.polygon.findOne",
+tests.push( { name: "Geo.within.2dsphere.polygon.findOne",
               pre: function( collection ) {
                   collection.drop();
                   collection.ensureIndex({loc: "2dsphere"});
@@ -110,7 +110,7 @@ tests.push( { name: "Geo.within.polygon.findOne",
                   { op: "findOne", query: {loc: { $geoWithin: {$geometry: { type: "Polygon", coordinates: [[ [-10,-10], [ 8, -9], [10, 10], [ 5,  6], [-9,  9], [-10,-10] ] ] } }} } }
               ] } );
 
-tests.push( { name: "Geo.within.polygon.findOne.offcenter",
+tests.push( { name: "Geo.within.2dsphere.polygon.findOne.offcenter",
               pre: function( collection ) {
                   collection.drop();
                   collection.ensureIndex({loc: "2dsphere"});
@@ -120,7 +120,7 @@ tests.push( { name: "Geo.within.polygon.findOne.offcenter",
                   { op: "findOne", query: {loc: { $geoWithin: {$geometry: { type: "Polygon", coordinates: [[ [  0,-20], [18,-19], [20,  0], [15, -4], [ 1, -1], [  0,-20] ] ] } }} } }
               ] } );
 
-tests.push( { name: "Geo.geoJSON.within.polygon.findOne",
+tests.push( { name: "Geo.geoJSON.within.2dsphere.polygon.findOne",
               pre: function( collection ) {
                   collection.drop();
                   collection.ensureIndex({loc: "2dsphere"});
@@ -130,7 +130,7 @@ tests.push( { name: "Geo.geoJSON.within.polygon.findOne",
                   { op: "findOne", query: {loc: { $geoWithin: {$geometry: { type: "Polygon", coordinates: [[ [-10,-10], [ 8, -9], [10, 10], [ 5,  6], [-9,  9], [-10,-10] ] ] } }} } }
               ] } );
 
-tests.push( { name: "Geo.geoJSON.within.polygon.findOne.offcenter",
+tests.push( { name: "Geo.geoJSON.within.2dsphere.polygon.findOne.offcenter",
               pre: function( collection ) {
                   collection.drop();
                   collection.ensureIndex({loc: "2dsphere"});
@@ -141,7 +141,7 @@ tests.push( { name: "Geo.geoJSON.within.polygon.findOne.offcenter",
               ] } );
 
 
-tests.push( { name: "Geo.within.centerSphere.findOne",
+tests.push( { name: "Geo.within.2dsphere.centerSphere.findOne",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2dsphere"});
@@ -151,7 +151,7 @@ tests.push( { name: "Geo.within.centerSphere.findOne",
                   { op: "findOne", query: {loc: { $geoWithin: {$centerSphere: [[0, 0], 0.175]}} } }
               ] } );
 
-tests.push( { name: "Geo.within.centerSphere.findOne.offcenter",
+tests.push( { name: "Geo.within.2dsphere.centerSphere.findOne.offcenter",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2dsphere"});
@@ -161,7 +161,7 @@ tests.push( { name: "Geo.within.centerSphere.findOne.offcenter",
                   { op: "findOne", query: {loc: { $geoWithin: {$centerSphere: [[20, -20], 0.175]}} } }
               ] } );
 
-tests.push( { name: "Geo.geoJSON.within.centerSphere.findOne",
+tests.push( { name: "Geo.geoJSON.within.2dsphere.centerSphere.findOne",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2dsphere"});
@@ -171,7 +171,7 @@ tests.push( { name: "Geo.geoJSON.within.centerSphere.findOne",
                   { op: "findOne", query: {loc: { $geoWithin: {$centerSphere: [[0, 0], 0.175]}} } }
               ] } );
 
-tests.push( { name: "Geo.geoJSON.within.centerSphere.findOne.offcenter",
+tests.push( { name: "Geo.geoJSON.within.2dsphere.centerSphere.findOne.offcenter",
               pre: function( collection ) { 
               	  collection.drop(); 
                   collection.ensureIndex({loc: "2dsphere"});
@@ -269,5 +269,45 @@ tests.push( { name: "Geo.geoJSON.near.2dSphere.find100.offcenter",
               ] } );
 
 
+// geoNearSphere
+tests.push( { name: "Geo.geoJSON.nearSphere.2dsphere.findOne.center",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2dsphere"});
+                  generateGridMapGeoJSON(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $nearSphere: {$geometry: { type: "Point", coordinates: [ 0.1,  0.1]} } } } }
+              ] } );
+
+tests.push( { name: "Geo.geoJSON.nearSphere.2dsphere.findOne.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2dsphere"});
+                  generateGridMapGeoJSON(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "findOne", query: {loc: { $nearSphere: {$geometry: { type: "Point", coordinates: [-20.1, -20.1]} } } } }
+              ] } );
+
+tests.push( { name: "Geo.geoJSON.nearSphere.2dsphere.find.center",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2dsphere"});
+                  generateGridMapGeoJSON(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $nearSphere: {$geometry: { type: "Point", coordinates: [ 0.1,  0.1]}, $maxDistance: 1130000 } } } }
+              ] } );
+
+tests.push( { name: "Geo.geoJSON.nearSphere.2dsphere.find.offcenter",
+              pre: function( collection ) { 
+              	  collection.drop(); 
+                  collection.ensureIndex({loc: "2dsphere"});
+                  generateGridMapGeoJSON(collection, -50, -50, 50, 50);
+              },
+              ops: [
+                  { op: "find", query: {loc: { $nearSphere: {$geometry: { type: "Point", coordinates: [-20.1, -20.1]}, $maxDistance: 1105000 } } } }
+              ] } );
 
 
