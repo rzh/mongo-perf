@@ -260,14 +260,13 @@ tests.push( { name: "Geo.nearSphere.2d.find.center",
                   { op: "find", query: {loc: { $nearSphere: [ 0.1,  0.1], $maxDistance: 0.1798 } } }
               ] } );
 
-tests.push( { name: "Geo.geoJSON.geoNear.nearSphere.find.offcenter",
+tests.push( { name: "Geo.nearSphere.2d.find.offcenter",
               pre: function( collection ) { 
               	  collection.drop(); 
-                  collection.ensureIndex({loc: "2dsphere"});
-                  generateGridMapGeoJSON(collection, -50, -50, 50, 50);
+                  collection.ensureIndex({loc: "2d"});
+                  generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
                   { op: "find", query: {loc: { $nearSphere: [ -20.1,  -20.1], $maxDistance: 0.175 } } }
               ] } );
-
 
