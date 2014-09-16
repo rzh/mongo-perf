@@ -67,7 +67,7 @@ tests.push( { name: "Geo.within.2dsphere.centersphere",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "find", query: {loc: { $geowithin: {$centersphere: [[0, 0], 0.175]}} } }
+                  { op: "find", query: {loc: { $geoWithin: {$centerSphere: [[0, 0], 0.175]}} } }
               ] } );
 
 tests.push( { name: "Geo.within.2dsphere.centersphere.offcenter",
@@ -77,7 +77,7 @@ tests.push( { name: "Geo.within.2dsphere.centersphere.offcenter",
                   generateGridMap(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "find", query: {loc: { $geowithin: {$centersphere: [[20, -20], 0.175]}} } }
+                  { op: "find", query: {loc: { $geoWithin: {$centerSphere: [[20, -20], 0.175]}} } }
               ] } );
 
 tests.push( { name: "Geo.geoJSON.within.2dsphere.centersphere",
@@ -87,7 +87,7 @@ tests.push( { name: "Geo.geoJSON.within.2dsphere.centersphere",
                   generateGridMapGeoJSON(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "find", query: {loc: { $geowithin: {$centersphere: [[0, 0], 0.175]}} } }
+                  { op: "find", query: {loc: { $geoWithin: {$centerSphere: [[0, 0], 0.175]}} } }
               ] } );
 
 tests.push( { name: "Geo.geoJSON.within.2dsphere.centersphere.offcenter",
@@ -97,7 +97,7 @@ tests.push( { name: "Geo.geoJSON.within.2dsphere.centersphere.offcenter",
                   generateGridMapGeoJSON(collection, -50, -50, 50, 50);
               },
               ops: [
-                  { op: "find", query: {loc: { $geowithin: {$centersphere: [[20, -20], 0.175]}} } }
+                  { op: "find", query: {loc: { $geoWithin: {$centerSphere: [[20, -20], 0.175]}} } }
               ] } );
 // findOne
 tests.push( { name: "Geo.within.2dsphere.polygon.findOne",
