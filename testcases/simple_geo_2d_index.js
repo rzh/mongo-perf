@@ -11,14 +11,6 @@ function generateGridMap(collection, x1, y1, x2, y2) {
     }
 }
 
-function generateGridMapGeoJSON(collection, x1, y1, x2, y2) {
-    for( var i = x1; i < ( x2 + 1); i++) {
-        for(var j = y1; j < (y2 + 1); j++) {
-            collection.insert({loc: {type: "Point", coordinates: [i, j]}});
-        }
-    }
-}
-
 // geoWithin
 tests.push( { name: "Geo.within.2d.center",
               pre: function( collection ) { 
@@ -188,7 +180,6 @@ tests.push( { name: "Geo.within.2d.polygon.findOne.offcenter",
 
 
 // geoNear
-
 tests.push( { name: "Geo.near.2d.findOne.center",
               pre: function( collection ) { 
                     collection.drop(); 
