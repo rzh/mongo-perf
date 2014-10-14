@@ -229,3 +229,32 @@ tests.push( { name: "Queries.FindProjectionDottedField",
                     query: { },
                     filter: { 'x.y' : 1, _id : 0 } }
               ] } );
+
+
+// SERVER-14625
+tests.push( { name : "Queries.elemMatch",
+              pre: function( collection ) {
+                  collection.drop();
+                  for ( var i = 0; i < 1000; i++ ) {
+                      collection.insert( { 
+                          t: i, 
+                          a: [{x: 5000, y:i}, {x:i, y:i}, {x: i * 2, y:i}]
+                       });
+                  }
+                  collection.ensureIndex({"a.y": 1, "a.x": 1});
+              },
+              ops : [
+                    { op: "let", 
+                        target: "x", 
+                        value: {"#RAND_INT": [100,1000]}},
+
+                    { op: “findOne”,
+                        query: {
+                            t: { "#VARIABLE" : "x" }, 
+                            a: { $elemMatch: {
+                                y: {"#VARIABLE" : "x" }, 
+                                x: {$ne: {
+                                    "#RAND_INT": [0,99]}}}}}
+              ] } );
+
+
