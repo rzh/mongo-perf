@@ -6,12 +6,14 @@
         <link href="static/css/jquery-ui-1.10.1.custom.min.css" rel="stylesheet">
         <link rel="stylesheet" href="static/css/page.css">
         <link href="static/css/perf_style.css" rel="stylesheet">
+        <link href="static/bootstrap-3.1.1-dist/css/bootstrap.min.css" rel="stylesheet">
         <script type="text/javascript" src="static/js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="static/js/jquery-ui-1.10.1.custom.min.js"></script>
         <script type="text/javascript" src="static/js/perf_lib.js"></script>
         <script type="text/javascript" src="static/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="static/js/dygraph-combined.js"></script>
         <script>
+            reloadlist = []
             $(document).ready(function(){
                 $('table').dataTable({
                         "bPaginate": false,
@@ -19,8 +21,9 @@
                         "bFilter": false,
                         "bInfo": false,
                         "bAutoWidth": true
-                    });
                 });
+                hideTablesClicked();
+            });
 
             var dygraphs = [];
             var dycolors = ["#7BBADE", "#93DE7F", "#F29E4A", "#FF7050",
@@ -30,81 +33,125 @@
             function dyToggle(graphIdx, seriesIdx, el) {
               dygraphs[graphIdx].setVisibility(seriesIdx, el.checked);
             }
+
+            var numGraphs = {{len(results)}};
+
+            //TODO fix this to do it properly, its an ugly hack
+            function useThreads() {
+                var myurl = document.URL;
+                myurl = myurl + '&xaxis=1'
+                window.location.replace(myurl);
+            }
+            function useTime() {
+                var myurl = document.URL;
+                myurl = myurl + '&xaxis=0'
+                window.location.replace(myurl);
+            }
+
+            function hideTablesClicked() {
+                //change button to show tables (and change function call)
+                $('#tablesbutton').attr('onclick', 'showTablesClicked()');
+                $('#tablesbutton').text('Show Tables');
+                //call hideTables
+                hideTables();
+            }
+
+            function showTablesClicked() {
+                //change button to show tables (and change function call)
+                $('#tablesbutton').attr('onclick', 'hideTablesClicked()');
+                $('#tablesbutton').text('Hide Tables');
+                //call showTables
+                showTables();
+            }
+
+            function hideTables() {
+                for(var i = 0; i < numGraphs; i++) {
+                    hideTableByIDClicked(i);
+                }
+            }
+
+            function showTables() {
+                for(var i = 0; i < numGraphs; i++) {
+                    showTableByIDClicked(i);
+                }
+            }
+
+            function hideTableByIDClicked(IDNum) {
+                //change button to show tables (and change function call)
+                $('#table' + IDNum + 'button').attr('onclick', 'showTableByIDClicked(' + IDNum + ')');
+                $('#table' + IDNum + 'button').text('Show Table');
+                //call hideTables
+                hideTableByID(IDNum);
+            }
+
+            function showTableByIDClicked(IDNum) {
+                $('#table' + IDNum + 'button').attr('onclick', 'hideTableByIDClicked(' + IDNum + ')');
+                $('#table' + IDNum + 'button').text('Hide Table');
+                //call hideTables
+                showTableByID(IDNum);
+            }
+
+            function hideTableByID(tableID) {
+                $('#table-' + tableID).css('display', 'none');
+            }
+
+            function showTableByID(tableID) {
+                $('#table-' + tableID).css('display', '');
+            }
+
+
+
+            var even_spread = true;
+
+            function get_date_data(start_data) {
+                var out_data = [];
+                var spread_counter = 1;
+                for(var i = 0; i < start_data.length; i++) {
+                    var temp_list = []
+                    for(var j = 0; j < start_data[i].length; j++) {
+                        if(j === 0) {
+                            if(even_spread) {
+                                temp_list.push(spread_counter);
+                                spread_counter += 1;
+                            } else {
+                                temp_list.push(new Date(start_data[i][j]))
+                            }
+                        } else {
+                            temp_list.push(start_data[i][j])
+                        }
+                    }
+                    out_data.push(temp_list)
+                }
+                return out_data
+            }
         </script>
     </head>
+    <div class="container">
     <body>
         <h1>MongoDB Benchmark Results (<a href="/">Home</a>)</h1>
-        % platforms = ' '.join(request.GET.getall('platforms'))
-        % versions = ' '.join(request.GET.getall('versions'))
-        % labels = ' '.join(request.GET.getall('labels'))
-        % dates = ' '.join(request.GET.getall('dates'))
-        % home = ' '.join(request.GET.getall('home'))
-        % metric = request.GET.get('metric', 'ops_per_sec')
-        % multidb = request.GET.get('multidb', '0 1')
-        % limit = request.GET.get('limit', '10')
-        % start = request.GET.get('start', '')
-        % end = request.GET.get('end', '')
-        <form action="/results">
-            <fieldset id="selectors" class="fields">
-                <div>
-                    <div>
-                        <label for="metric">Metric</label>
-                        <select id="metric" name="metric">
-                        <option {{'selected' if metric=="ops_per_sec" else ""}}>ops_per_sec</option>
-                        <option {{'selected' if metric=="time" else ""}}>time</option>
-                        <option {{'selected' if metric=="speedup" else ""}}>speedup</option>
-                        </select>
-                    </div>
-                    <div class="floatleft">
-                        <label for="labels">Labels (space-separated or /regex/)</label>
-                        <input type="text" name="labels" value="{{labels}}"/>
-                    </div>
-                    <div class="floatright">
-                        <label for="platforms">Platforms (space-separated or /regex/)</label>
-                        <input type="text" name="platforms" value="{{platforms}}"/>
-                    </div>
-                    <div class="floatleft">
-                        <label for="multidb">Single/Muiti database (0 or 1)</label>
-                        <input type="text" name="multidb" value="{{multidb}}"/>
-                    </div>
-                    <div class="floatright">
-                        <label for="versions">Versions (space-separated or /regex/)</label>
-                        <input type="text" name="versions" value="{{versions}}"/>
-                    </div>
-                    <div class="floatleft">
-                        <label for="start">Start Date (YYYY-MM-DD)</label>
-                        <input type="text" name="start" value="{{start}}"/>
-                    </div>
-                    <div class="floatright">
-                        <label for="end">End Date (YYYY-MM-DD)</label>
-                        <input type="text" name="end" value="{{end}}"/>
-                    </div>
-                    <div class="floatleft">
-                        <label for="dates">Specific dates (space-separated or /regex/)</label>
-                        <input type="text" name="dates" value="{{dates}}"/>
-                    </div>
-                    <div class="floatright">
-                        <label for="limit">Limit</label>
-                        <input type="text" name="limit" value="{{limit}}"/>
-                    </div>
-                </div>
-                <input type="hidden" name="home" value="{{home}}"/>
-                <input class="gofloat" type="submit" value="Go"/>
-            </fieldset>
-        </form>
+        %if use_dates:
+        <button onclick='useThreads()' >Use Threads</button>
+        %else:
+        <button onclick='useTime()' >Use Time</button>
+        %end
+
+        <button id='tablesbutton' onclick='showTablesClicked()'>Show Tables</button>
+
+        <br />
         %import urllib
         %for k, (outer_result, dygraph_data) in enumerate(zip(results, dygraph_results)):
         <div class="test-entry">
         <h2 id="{{outer_result['name']}}"><a href="https://github.com/search?q={{outer_result['name'][outer_result['name'].rfind(":") + 1:]}}+repo%3Amongodb%2Fmongo-perf&amp;type=Code&amp;ref=searchresults" target="_blank">{{outer_result['name']}}</a></h2>
-        <table class="display">
+        <button id='table{{k}}button' onclick='showTableByIDClicked("{{k}}")'>Show Table</button>
+        <table class="table table-striped" id="table-{{k}}">
             <thead>
                 <tr>
-                    <th>Num</th>
-                    <th>Label</th>
-                    <th>Platform</th>
-                    <th>Version</th>
-                    <th>Date</th>
-                    <th>Commit</th>
+                    <th style="width: 5%">Num</th>
+                    <th style="width: 15%">Label</th>
+                    <th style="width: 10%">Platform</th>
+                    <th style="width: 10%">Version</th>
+                    <th style="width: 10%">Date</th>
+                    <th style="width: 10%">Commit</th>
                     %for thread in threads:
                     <th>{{thread}} thread{{'' if thread == 1 else 's'}}</th>
                     %end
@@ -112,42 +159,81 @@
             </thead>
             <tbody>
                 %for i, result in enumerate(outer_result['results']):
-                %host_keys = ['date', 'label', 'version']
-                %host = {}
-                %for key in host_keys:
-                %host[key] = result[key]
-                %end
-                %host = urllib.urlencode(host)
                 <tr>
                     <td>{{i+1}}</td>
-                    <td><a href="host?{{host}}">{{result['label']}}</a></td>
+                    <td>{{result['label']}}</td>
                     <td>{{result['platform']}}</td>
                     <td>{{result['version']}}</td>
                     <td>{{result['date']}}</td>
                     <td><a href="https://github.com/mongodb/mongo/commit/{{result['commit']}}" target="_blank">{{result['commit'][:7]}}</a></td>
                     %for thread in threads:
-                    <td>{{"{0:.2f}".format(result.get(str(thread), {metric:'--'})[metric])}}</td>
+                     <td>{{"{0:.2f}".format(result[str(thread)]["ops_per_sec"])}} <br/>
+                         &sigma; = 
+                     {{"{0:.2f}".format(result[str(thread)]["standardDeviation"])}}</td>
                     %end
                 </tr>
                 %end
             </tbody>
         </table>
         <br/>
+        <div class="container">
         <div class="dygraph-wrapper">
           <div id="graph_{{k}}" class="graph" style="width:600px;height:300px;"></div>
         </div>
         <script>
-        $("#graph-labels-{{k}}").ready(function(){
+        var num_map_{{k}} = {}
+        %for i, result in enumerate(outer_result['results']):
+        var commitdate = new Date("{{result['date']}}");
+        var commitversion = "{{result['version']}}"
+        if(commitversion.indexOf("pre") >= 0) {
+            num_map_{{k}}[{{i + 1}}] = "{{result['commit'][:7]}}";
+        } else {
+            num_map_{{k}}[{{i + 1}}] = "{{result['version']}}";
+        }
+        %end
+        %if use_dates:
+            var date_data_{{k}} = get_date_data({{!dygraph_data['data']}});
+        %end
+        //TODO parameterize
+        function dygraph_ready_{{k}}() {
           var dygraph_{{k}} = new Dygraph(
             $('#graph_{{k}}')[0],
-            {{!dygraph_data['data']}},
+            %if use_dates:
+                date_data_{{k}},
+            %else:
+                {{!dygraph_data['data']}},
+            %end
             {
+              hideOverlayOnMouseOut: false,
               labels: {{!dygraph_data['labels_json']}},
-              strokeWidth: 3,
-              xRangePad: 2,
+              strokeWidth: 3, //width of lines connecting data points
               colors: dycolors,
-              labelsSeparateLines: true,
-              labelsDiv: "graph-labels-{{k}}"
+              labelsDiv: "graph-labels-{{k}}",
+              includeZero: true, //ensure y-axis starts at 0
+              xRangePad: 5,
+              errorBars: true,
+              fillAlpha: 0.50,
+              %if use_dates:
+              axes: {
+                x: {
+                  axisLabelFormatter: function(x) {
+                    var xval = parseFloat(x);
+                    var xfloor = parseInt(x);
+                    if(xval === xfloor) {
+                        return num_map_{{k}}[xval];
+                    } else {
+                        return "";
+                    }
+                  },
+                  valueFormatter: function(x) {
+                    return num_map_{{k}}[x];
+                  }
+                }
+              },
+              xlabel: 'Commit Date' //label for x-axis
+              %else:
+              xlabel: 'Threads' //label for x-axis
+              %end
             });
           dygraphs.push(dygraph_{{k}});
 
@@ -156,7 +242,8 @@
             $(this).css("background-color", dycolors[idx % dycolors.length]);
           });
 
-        });
+        };
+        $("#graph-labels-{{k}}").ready(dygraph_ready_{{k}});
 
         </script>
         <div id="legendContainer_{{k}}" class="legend-box">
@@ -167,12 +254,13 @@
             <label>{{entry}}</label>
           </div>
           %end
-
         </div>
         <div class="dygraph-labels" id="graph-labels-{{k}}"></div>
+        </div>
         <div class="section-break"></div>
       </div>
         %end
+    </div>
     </body>
 </html>
 %# vim: set ft=html:

@@ -2,6 +2,26 @@ if ( typeof(tests) != "object" ) {
     tests = [];
 }
 
+tests.push( { name: "Commands.isMaster",
+              ops: [
+                  { op: "command", ns : "#B_DB", command : { "isMaster" : 1 } }
+              ] } );
+
+//tests.push( { name: "Commands.buildInfo",
+//              ops: [
+//                  { op: "command", ns : "#B_DB", command : { "buildInfo" : 1 } }
+//              ] } );
+
+//tests.push( { name: "Commands.illegalOp",
+//              ops: [
+//                  { op: "command", ns : "#B_DB", command : { "notExist" : 1 } }
+//              ] } );
+
+//tests.push( { name: "Commands.nop",
+//              ops: [
+//                  { op: "nop" }
+//              ] } );
+
 tests.push( { name: "Commands.CountsFullCollection",
               pre: function( collection ) {
                   collection.drop();
@@ -32,17 +52,18 @@ tests.push( { name: "Commands.CountsIntIDRange",
               ] } );
 
 
-tests.push( { name: "Commands.FindAndModifyInserts",
+tests.push( { name: "Commands.v2.FindAndModifyInserts",
               pre: function( collection ) {
                   collection.drop();
               },
               ops: [
+                  { op: "let", target: "x", value: {"#RAND_INT_PLUS_THREAD": [0,1000]}},
                   { op: "command",
                     ns : "#B_DB",
                     command : { findAndModify : "#B_COLL",
                                 upsert : true,
-                                query : { _id : { "#RAND_INT" : [ 0, 999999999 ] } },
-                                update : { _id : { "#RAND_INT" : [ 0, 999999999 ] } } } }
+                                query : { _id : { "#VARIABLE" : "x" } },
+                                update : { _id : { "#VARIABLE" : "x" } } } }
               ] } );
 
 function genDistinctTest( name, index, query ) {

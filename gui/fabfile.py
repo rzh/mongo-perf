@@ -6,8 +6,8 @@ from fabric.api import task, env, run, sudo
 env.use_ssh_config = True
 env.forward_agent = True
 
-git_repo = 'git@github.com:mongodb/mongo-perf'
-env.hosts = ['mongo-perf-ui.vpc1.build.10gen.cc']
+git_repo = 'https://github.com/mongodb/mongo-perf'
+env.hosts = ['qconner@mongo-perf-ui.vpc3.10gen.cc']
 
 base_dir = '/opt/10gen/mongo-perf-ui'
 current_link = os.path.join(base_dir, 'current')
